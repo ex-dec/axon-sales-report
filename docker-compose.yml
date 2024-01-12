@@ -1,0 +1,103 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/api.Dockerfile
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "80:80"
+    command: php -S 0.0.0.0:80
+    depends_on:
+      - api-db
+    networks:
+      - api-networks
+    stdin_open: true
+    tty: true
+
+  api-db:
+    build:
+      context: .
+      dockerfile: ./docker/api-db.Dockerfile
+    volumes:
+      - api-db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=classicmodels
+    networks:
+      - api-networks
+
+  kong-gateway:
+    build:
+      context: .
+      dockerfile: ./docker/kong-gateway.Dockerfile
+    networks:
+      - api-gateway
+      - api-networks
+    depends_on:
+      - kong-db
+      - kong-migration-db
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+      - "8003:8003"
+      - "8004:8004"
+      - "8443:8443"
+      - "8444:8444"
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-db
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: admin
+      KONG_PG_DATABASE: kong
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_ADMIN_GUI_LISTEN: 0.0.0.0:8002
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    restart: on-failure
+
+  kong-migration-db:
+    image: kong:latest
+    command: kong migrations bootstrap
+    depends_on:
+      - kong-db
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-db
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: admin
+      KONG_PG_DATABASE: kong
+    networks:
+      - api-gateway
+    restart: on-failure
+
+  kong-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: kong
+    volumes:
+      - gateway-db:/var/lib/postgresql/data
+    networks:
+      - api-gateway
+
+networks:
+  api-networks:
+    driver: bridge
+  api-gateway:
+    driver: bridge
+
+volumes:
+  api-db:
+    driver: local
+  gateway-db:
+    driver: local
