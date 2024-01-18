@@ -50,6 +50,11 @@ if ((isset($uri[2]) && $uri[2] == 'customer')) {
     $objFeedController = new QueryController();
     $strMethodName = $uri[3];
     $objFeedController->{$strMethodName}();
+} elseif ((isset($uri[2]) && $uri[2] == 'api')) {
+    require PROJECT_ROOT_PATH . "/Controller/Api/Controller.php";
+    $objFeedController = new Controller();
+    $strMethodName = $uri[3];
+    $objFeedController->api($strMethodName);
 } else {
     header("HTTP/1.1 404 Not Found");
     exit();
