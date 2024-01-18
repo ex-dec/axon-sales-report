@@ -6,11 +6,11 @@ class OrderDetailsModel extends Database
 {
     public function getOrderDetails()
     {
-        return $this->select("SELECT * from orderdetails;");
+        return $this->query("SELECT * from orderdetails;");
     }
 
     public function getTotalOrderDetails()
     {
-        return $this->select("SELECT count(distinct orderNumber) as Total_Orders from orders");
+        return $this->query("SELECT count(distinct orderNumber) as Total_Orders from orders");
     }
 }

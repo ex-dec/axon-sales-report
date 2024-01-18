@@ -6,17 +6,17 @@ class PaymentModel extends Database
 {
     public function getPayments()
     {
-        return $this->select("SELECT * from payments");
+        return $this->query("SELECT * from payments");
     }
 
     public function getTotalAmount()
     {
-        return $this->select("SELECT sum(amount) Total_Amount from payments");
+        return $this->query("SELECT sum(amount) Total_Amount from payments");
     }
 
     public function getAmountPaid()
     {
-        return $this->select(
+        return $this->query(
             "SELECT customerNumber, sum(amount) as Total_Payment
              from payments 
              group by customerNumber"
@@ -25,7 +25,7 @@ class PaymentModel extends Database
 
     public function getTotalAmountByYear()
     {
-        return $this->select("SELECT year(paymentDate) as Year,
+        return $this->query("SELECT year(paymentDate) as Year,
         sum(amount) as Total_Amount,
         sum(sum(amount)) over( order by Year(paymentDate)) as Sum_Of_Amount
         from payments
@@ -35,7 +35,7 @@ class PaymentModel extends Database
 
     public function getTotalAmountByYearAndMonth()
     {
-        return $this->select("SELECT year(paymentDate) as Year,
+        return $this->query("SELECT year(paymentDate) as Year,
         monthname(paymentDate) as Month_Name,
         sum(amount) as Total_Amount
         from payments

@@ -14,7 +14,7 @@ class Database
         }
     }
 
-    public function select($query = "", $params = [])
+    public function query($query = "", $params = [])
     {
         try {
             $statement = $this->executeStatement($query, $params);

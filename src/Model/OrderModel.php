@@ -6,12 +6,12 @@ class OrderModel extends Database
 {
     public function getOrders()
     {
-        return $this->select("SELECT * from orders");
+        return $this->query("SELECT * from orders");
     }
 
     public function getTotalOrders()
     {
-        return $this->select(
+        return $this->query(
             "SELECT year(orderDate) as Year,
                     MONTH(orderDate) AS Month,
                     monthname(orderDate) as Month_Name,
@@ -25,7 +25,7 @@ class OrderModel extends Database
 
     public function getTotalShipOrders()
     {
-        return $this->select(
+        return $this->query(
             "SELECT status, count(orderNumber) as Total_Orders 
             from orders 
             where status = 'Shipped';"

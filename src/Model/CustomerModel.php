@@ -6,16 +6,16 @@ class CustomerModel extends Database
 {
     public function getCustomers()
     {
-        return $this->select("SELECT * from customers");
+        return $this->query("SELECT * from customers");
     }
 
     public function getTotalCustomers()
     {
-        return $this->select("SELECT count(distinct customerNumber) as total_customers from customers");
+        return $this->query("SELECT count(distinct customerNumber) as total_customers from customers");
     }
 
     public function checkNullCustomer()
     {
-        return $this->select("SELECT customerNumber from customers where customerNumber is null");
+        return $this->query("SELECT customerNumber from customers where customerNumber is null");
     }
 }

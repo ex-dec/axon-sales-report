@@ -6,16 +6,16 @@ class EmployeeModel extends database
 {
     public function getEmployees()
     {
-        return $this->select("SELECT * from employees");
+        return $this->query("SELECT * from employees");
     }
 
     public function getTotalEmployees()
     {
-        return $this->select("SELECT count(distinct employeeNumber) as Total_Employees from employees");
+        return $this->query("SELECT count(distinct employeeNumber) as Total_Employees from employees");
     }
 
     public function checkNullEmployee()
     {
-        return $this->select("SELECT employeeNumber from employees where employeeNumber is null");
+        return $this->query("SELECT employeeNumber from employees where employeeNumber is null");
     }
 }
