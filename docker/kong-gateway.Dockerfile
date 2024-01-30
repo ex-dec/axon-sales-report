@@ -1,4 +1,4 @@
-FROM kong:latest
+FROM kong:2.8
 
 ENV KONG_DATABASE=postgres
 ENV KONG_PG_HOST=kong-db

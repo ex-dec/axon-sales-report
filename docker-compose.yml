@@ -8,8 +8,6 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./src:/var/www/html
-    ports:
-      - "80:80"
     command: php -S 0.0.0.0:80
     depends_on:
       - api-db
@@ -29,6 +27,8 @@ services:
       - MYSQL_DATABASE=classicmodels
     networks:
       - api-networks
+    ports:
+      - "3306:3306"
 
   kong-gateway:
     build:
