@@ -8,4 +8,12 @@ class ApiModel extends Database
     {
         return $this->query("SHOW databases;");
     }
+
+    public function highCustomer()
+    {
+        return $this->query("select Country, Count(*) Total_Customers
+        from customers
+        group by country
+        order by Total_Customers desc");
+    }
 }
